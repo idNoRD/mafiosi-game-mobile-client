@@ -1,41 +1,202 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Tab One
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button>
+                <!--<ion-icon name="checkmark" *ngIf="cordovaWebSocket.isOpen"></ion-icon>-->
+                <ion-icon name="alert" *ngIf="!cordovaWebSocket.isOpen"></ion-icon>
+                <ion-text color="danger" *ngIf="!cordovaWebSocket.isOpen">
+                    disconnected
+                </ion-text>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>
+            Mafiosi
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [hidden]="cordovaWebSocket.isOpen">
     <ion-card class="welcome-card">
-      <img src="/assets/shapes.svg" alt="" />
-      <ion-card-header>
-        <ion-card-subtitle>Get Started</ion-card-subtitle>
-        <ion-card-title>Welcome to Ionic</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p>
-      </ion-card-content>
+        <ion-card-header>
+            <ion-card-title>
+                Unable to connect, please try later
+            </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+
+            <form (ngSubmit)="changeServerAndConnect()">
+                <ion-item>
+                    <ion-label>URL</ion-label>
+                    <ion-input type="text" required [(ngModel)]="changedServerAddress" name="serverAddress"></ion-input>
+                </ion-item>
+                <ion-button type="submit">Change server</ion-button>
+            </form>
+
+        </ion-card-content>
     </ion-card>
-    <ion-list lines="none">
-      <ion-list-header>
-        <ion-label>Resources</ion-label>
-      </ion-list-header>
-      <ion-item href="https://ionicframework.com/docs/">
-        <ion-icon slot="start" color="medium" name="book"></ion-icon>
-        <ion-label>Ionic Documentation</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/building/scaffolding">
-        <ion-icon slot="start" color="medium" name="build"></ion-icon>
-        <ion-label>Scaffold Out Your App</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/layout/structure">
-        <ion-icon slot="start" color="medium" name="grid"></ion-icon>
-        <ion-label>Change Your App Layout</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/theming/basics">
-        <ion-icon slot="start" color="medium" name="color-fill"></ion-icon>
-        <ion-label>Theme Your App</ion-label>
-      </ion-item>
-    </ion-list>
 </ion-content>
+
+<ion-content [hidden]="viewToShow != 'START_VIEW'">
+    <ion-card class="welcome-card">
+        <ion-grid>
+            <ion-row>
+                <img src="/assets/m_logo.png" alt=""/>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+
+                </ion-col>
+                <ion-col>
+                    <form (ngSubmit)="joinGame()">
+                        <ion-item>
+                            <ion-input type="number" required [(ngModel)]="gamePin" name="gamePin"
+                                       placeholder="GAME PIN"></ion-input>
+                        </ion-item>
+                        <ion-button type="submit">Join Game</ion-button>
+                    </form>
+                </ion-col>
+                <ion-col>
+
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col></ion-col>
+                <ion-col style="text-align:center;">
+                    <ion-text>or</ion-text>
+                </ion-col>
+                <ion-col></ion-col>
+            </ion-row>
+
+
+            <ion-row>
+                <ion-col>
+
+                </ion-col>
+                <ion-col>
+                    <ion-button (click)="createGame()" size="small" color="secondary">Create Game</ion-button>
+                </ion-col>
+                <ion-col>
+
+                </ion-col>
+            </ion-row>
+
+        </ion-grid>
+        <ion-row>
+
+        </ion-row>
+    </ion-card>
+
+</ion-content>
+
+
+<ion-content [hidden]="viewToShow != 'REQ_NAME'">
+    <ion-card class="welcome-card">
+        <ion-grid>
+            <ion-row>
+                <ion-button (click)="cancelGame()" size="small" color="secondary">Cancel</ion-button>
+
+            </ion-row>
+            <form (ngSubmit)="sendNickname()">
+                <ion-row>
+                    <ion-col>
+                    </ion-col>
+                    <ion-col size="6">
+
+                        <ion-item>
+                            <ion-input type="text" required [(ngModel)]="nickName" name="nickName"
+                                       placeholder="Nickname"></ion-input>
+                        </ion-item>
+
+
+                    </ion-col>
+                    <ion-col size="2">
+                        <ion-button type="submit">ENTER</ion-button>
+                    </ion-col>
+                    <ion-col></ion-col>
+                </ion-row>
+            </form>
+
+            <ion-row>
+            </ion-row>
+
+
+            <ion-row>
+
+            </ion-row>
+
+        </ion-grid>
+        <ion-row>
+
+        </ion-row>
+    </ion-card>
+    <img src="/assets/m_logo2.png" alt=""/>
+</ion-content>
+
+
+<ion-content [hidden]="viewToShow != 'START_INFO_OWNER'">
+
+
+    <ion-card class="welcome-card">
+        <ion-grid>
+            <ion-row>
+                <ion-button (click)="cancelGame()" size="small" color="secondary">Cancel</ion-button>
+
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                </ion-col>
+                <ion-col size="8">
+                    <ion-text>
+                        <h3>GAME PIN: {{dataStartInfoOwner.s_id}}</h3>
+                        <h4>Owner Name: {{dataStartInfoOwner.owner.name}}</h4>
+                        <h4>Connected players: {{dataStartInfoOwner.p_count}}</h4>
+                    </ion-text>
+                </ion-col>
+                <ion-col>
+                </ion-col>
+                <ion-col></ion-col>
+            </ion-row>
+
+            <ion-row></ion-row>
+            <ion-row>
+                <ion-col></ion-col>
+                <ion-col>
+                    <ion-button (click)="startGame()">START GAME</ion-button>
+                </ion-col>
+                <ion-col></ion-col>
+            </ion-row>
+
+        </ion-grid>
+        <ion-row>
+
+        </ion-row>
+    </ion-card>
+
+
+    <!--<form (ngSubmit)="joinGame()">
+          <ion-item>
+            <ion-input type="number" required [(ngModel)]="gamePin" name="gamePin" placeholder="GAME PIN"></ion-input>
+          </ion-item>
+          <ion-button type="submit">Join Game</ion-button>
+        </form>-->
+
+    <!--<ion-card-header>
+      <ion-card-subtitle>Get Started</ion-card-subtitle>
+      <ion-card-title>You can join existing game or create a new one</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p>
+    </ion-card-content>-->
+
+
+    <!--  <ion-list lines="none">
+        <ion-list-header>
+          <ion-label>Resources</ion-label>
+          <ion-button (click)="cancelGame()" size="small" color="secondary">Cancel</ion-button>
+        </ion-list-header>
+      </ion-list>-->
+
+</ion-content>
+
+<!--{{viewToShow}}-->

@@ -1,5 +1,7 @@
 {
   "name": "mafiosi",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
